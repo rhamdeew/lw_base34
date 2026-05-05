@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
     BUNDLE_PATH=/bundle_cache \
     GEM_HOME=/bundle_cache \
-    GEM_PATH=/bundle_cache
+    GEM_PATH=/bundle_cache \
+    WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
 ARG INSTALL_DEVELOPMENT_DEPENDENCIES=false
 ARG TARGETARCH
 ARG NODE_24_VERSION=24.14.1
@@ -39,6 +40,24 @@ RUN apt-get update && \
     apt-get autoclean && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/* /usr/share/man/* /usr/share/doc/*
+
+ARG WKHTMLTOPDF_VERSION=0.12.6.1-3
+RUN apt-get update && \
+    apt-get install -qq -y --no-install-recommends \
+      libfontconfig1 libfreetype6 libjpeg62-turbo libpng16-16 \
+      libx11-6 libxcb1 libxext6 libxrender1 zlib1g \
+      xfonts-base xfonts-75dpi && \
+    case "${TARGETARCH}" in \
+      amd64) WKHTMLTOPDF_DEB="wkhtmltox_${WKHTMLTOPDF_VERSION}.bookworm_amd64.deb" ;; \
+      arm64) WKHTMLTOPDF_DEB="wkhtmltox_${WKHTMLTOPDF_VERSION}.bookworm_arm64.deb" ;; \
+      *) echo "Unsupported arch for wkhtmltopdf: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac && \
+    curl -fsSLO "https://github.com/wkhtmltopdf/packaging/releases/download/${WKHTMLTOPDF_VERSION}/${WKHTMLTOPDF_DEB}" && \
+    dpkg -i "./${WKHTMLTOPDF_DEB}" && \
+    rm "./${WKHTMLTOPDF_DEB}" && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 RUN corepack enable && \
     corepack prepare yarn@stable --activate && \
