@@ -1,4 +1,4 @@
-FROM ruby:3.4-slim-bookworm
+FROM ruby:3.4-slim-trixie
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NOWARNINGS="yes" \
@@ -15,14 +15,14 @@ RUN apt-get update && \
     apt-get install -qq -y --no-install-recommends ca-certificates curl gnupg2 && \
     mkdir -p /usr/share/keyrings && \
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt trixie-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
     apt-get update && \
     apt-get install -qq -y --no-install-recommends \
       build-essential git-core imagemagick \
       default-libmysqlclient-dev default-mysql-client netcat-openbsd shared-mime-info \
       xvfb \
       libvips42 \
-      cmake pkg-config file \
+      cmake pkg-config file libzstd-dev \
       postgresql-client-15 libpq-dev && \
     case "${TARGETARCH}" in \
       amd64) NODE_TARBALL="node-v${NODE_24_VERSION}-linux-x64.tar.gz" ;; \
