@@ -22,7 +22,7 @@ RUN apt-get update && \
       default-libmysqlclient-dev default-mysql-client netcat-openbsd shared-mime-info \
       xvfb \
       libvips42 \
-      cmake pkg-config file libzstd-dev \
+      cmake pkg-config file libzstd-dev libyaml-dev \
       postgresql-client-15 libpq-dev && \
     case "${TARGETARCH}" in \
       amd64) NODE_TARBALL="node-v${NODE_24_VERSION}-linux-x64.tar.gz" ;; \
