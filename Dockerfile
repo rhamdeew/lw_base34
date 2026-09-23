@@ -20,7 +20,6 @@ RUN apt-get update && \
     apt-get install -qq -y --no-install-recommends \
       build-essential git-core imagemagick \
       default-libmysqlclient-dev default-mysql-client netcat-openbsd shared-mime-info \
-      xvfb \
       libvips42 \
       cmake pkg-config file libzstd-dev libyaml-dev \
       postgresql-client-15 libpq-dev && \
@@ -63,4 +62,6 @@ RUN corepack enable && \
     corepack prepare yarn@stable --activate && \
     gem update --system > /dev/null && \
     gem install bundler --silent && \
+    gem cleanup && \
+    rm -rf /root/.cache/gem /tmp/* && \
     echo "alias m='make'\nalias ms='make start'\nalias mss='make start_no_async'\nalias mc='make console'\nalias mcs='make console_no_async'\nalias r='bundle exec rspec'\nalias ra='bundle exec rubocop -a'\nalias raa='bundle exec rubocop -A'\nalias cred='bin/rails credentials:edit --environment development'\nalias crsd='bin/rails credentials:show --environment development'\nalias cres='bin/rails credentials:edit --environment staging'\nalias crss='bin/rails credentials:show --environment staging'\nalias crep='bin/rails credentials:edit --environment production'\nalias crsp='bin/rails credentials:show --environment production'\nalias cret='bin/rails credentials:edit --environment test'\nalias crst='bin/rails credentials:show --environment test'\nalias sw='bundle exec rake rswag:specs:swaggerize'\nexport EDITOR=vi\nexport PATH=\"/app/bin:/bundle_cache/bin:\$PATH\"" >> ~/.bashrc
